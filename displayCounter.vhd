@@ -18,6 +18,8 @@ signal outmachine : std_logic_vector(1 downto 0) := "00";
 signal outcounter0, outcounter1, outcounter2, outcounter3 : std_logic_vector(3 downto 0);
 
 signal outbcd0, outbcd1, outbcd2, outbcd3 : std_logic_vector(6 downto 0);
+-- levando em conta um botao que vale 0
+signal btn_deb : std_logic := '0';
 
 signal outlastmux : std_logic_vector(6 downto 0);
 -- saida seletor do Controlador_display
@@ -43,7 +45,7 @@ end component;
 
 component state_machine is
 port(
-		clk : std_logic;
+		btn : std_logic;
 		rst : in std_logic; 
 		output: out std_logic_vector(1 downto 0));
 end component;
@@ -74,9 +76,22 @@ component MUX4_1 is
            seletor : in STD_LOGIC_VECTOR (1 downto 0));
 end component;
 
+component debouncer is
+port(input  : in std_logic;
+	  rst    : in std_logic;
+	  clk    : in std_logic;
+	  output : out std_logic);
+end component;
 begin
+
+deb : debouncer port map(
+		input  => btn,
+		rst    => rst,
+		clk    => clk,
+		output => btn_deb);
+
 state_mach : state_machine port map(
-				clk => clk,
+				btn => btn_deb,
 				rst => rst,
 				output => outmachine);
 
