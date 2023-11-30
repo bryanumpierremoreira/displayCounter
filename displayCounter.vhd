@@ -2,11 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity displayCounter is
-port(btn     : in std_logic;
+port(
 	  clk     : in std_logic;
 	  rst     : in std_logic;
-	  output0 : out std_logic_vector(3 downto 0);
-	  output1 : out std_logic_vector(7 downto 0));
+	  outputdisplay0 : out std_logic_vector(3 downto 0);
+	  outputmux1 : out std_logic_vector(6 downto 0));
 end displayCounter;
 
 architecture behavior of displayCounter is
@@ -73,8 +73,8 @@ component modulo_BCD is
 end component;
 
 component MUX4_1 is
-    Port ( entrada_A, entrada_B, entrada_C, entrada_D : in STD_LOGIC_VECTOR (7 downto 0);
-           saida : out STD_LOGIC_VECTOR (7 downto 0);
+    Port ( entrada_A, entrada_B, entrada_C, entrada_D : in STD_LOGIC_VECTOR (6 downto 0);
+           saida : out STD_LOGIC_VECTOR (6 downto 0);
            seletor : in STD_LOGIC_VECTOR (1 downto 0));
 end component;
 
@@ -85,21 +85,21 @@ port(input  : in std_logic;
 	  output : out std_logic);
 end component;
 
---component btnClock is
---port(
---     clk     : in std_logic;
---	  rst     : in std_logic;
---	  low_clk : out std_logic);
---end component;
+component btnClock is
+port(
+     clk     : in std_logic;
+	  rst     : in std_logic;
+	  low_clk : out std_logic);
+end component;
 begin
 
---btn_clk : btnClock port map(
---				clk     => clk,
---				rst     => rst,
---				low_clk => outbtnclk);
+btn_clk : btnClock port map(
+				clk     => clk,
+				rst     => rst,
+				low_clk => outbtnclk);
 
 deb : debouncer port map(
-		input  => btn,
+		input  => outbtnclk,
 		rst    => rst,
 		clk    => clk,
 		output => btn_deb);
@@ -178,5 +178,7 @@ mux41out : MUX4_1 port map(
 				seletor   => seletormux,
 				saida     => outlastmux);
 
+outputdisplay0 <= outdisplay;
+outputmux1 <= outlastmux;
 				
 end behavior;

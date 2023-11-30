@@ -19,8 +19,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity MUX4_1 is
-    Port ( entrada_A, entrada_B, entrada_C, entrada_D : in STD_LOGIC_VECTOR (7 downto 0);
-           saida : out STD_LOGIC_VECTOR (7 downto 0);
+    Port ( entrada_A, entrada_B, entrada_C, entrada_D : in STD_LOGIC_VECTOR (6 downto 0);
+           saida : out STD_LOGIC_VECTOR (6 downto 0);
            seletor : in STD_LOGIC_VECTOR (1 downto 0));
 end MUX4_1;
 
