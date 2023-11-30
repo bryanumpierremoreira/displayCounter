@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity displayCounter is
-port(
+port(buttom0 : in std_logic;
 	  clk     : in std_logic;
 	  rst     : in std_logic;
 	  outputdisplay0 : out std_logic_vector(3 downto 0);
@@ -27,7 +27,9 @@ signal outlastmux : std_logic_vector(6 downto 0);
 signal seletormux : std_logic_vector(1 downto 0);
 signal outdisplay : std_logic_vector(3 downto 0);
 
-signal outbtnclk : std_logic := '0';
+signal outffd : std_logic := '0';
+signal inp_statemach : std_logic := '0';
+
 component divisorClock is
 port(slt     : in std_logic_vector(1 downto 0);
      clk     : in std_logic;
@@ -85,27 +87,30 @@ port(input  : in std_logic;
 	  output : out std_logic);
 end component;
 
-component btnClock is
-port(
-     clk     : in std_logic;
-	  rst     : in std_logic;
-	  low_clk : out std_logic);
+component ffd is
+port(D   : in std_logic;
+	  rst : in std_logic;
+	  clk : in std_logic;
+	  Q   : out std_logic);
 end component;
-begin
 
-btn_clk : btnClock port map(
-				clk     => clk,
-				rst     => rst,
-				low_clk => outbtnclk);
+begin
+ffd0 : ffd port map(
+			D   => btn_deb,
+			rst => rst,
+			clk => clk,
+			Q   => outffd);
 
 deb : debouncer port map(
-		input  => outbtnclk,
+		input  => buttom0,
 		rst    => rst,
 		clk    => clk,
 		output => btn_deb);
 
+inp_statemach <= btn_deb and not outffd;
+
 state_mach : state_machine port map(
-				btn => btn_deb,
+				btn => inp_statemach,
 				rst => rst,
 				output => outmachine);
 
